@@ -15,6 +15,7 @@ The following Zoho CRM Connection scope is needed:
 * ZohoCRM.notifications.ALL
 
 ## Tutorial
+In this set up, you will be frequently toggling between CRM and Flow, so it's a good idea to have 2 tabs/windows open for each app.
 
 ### Create a Zoho Flow Webhook
 Login to Zoho Flow and create a new Flow based on this settings: 
