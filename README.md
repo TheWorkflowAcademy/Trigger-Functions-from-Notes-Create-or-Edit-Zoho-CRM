@@ -43,13 +43,43 @@ param =
   "watch":
    {
      {
-        "channel_id":"1", //Arbitrary number
-        "events":{"Notes.create","Notes.edit"}, //The module actions for trigger
-        "channel_expiry":dateTime_FORMATTED, //If not set, default expiry is 1 hour
+        "channel_id":"1",
+        "events":{"Notes.create","Notes.edit"}, 
+        "channel_expiry":dateTime_FORMATTED,
         "notify_url": "INSERT_ZOHO_FLOW_WEBHOOK_HERE"
      } 
    }
 };
 
-
+response = invokeurl
+[
+	url :"https://www.zohoapis.com/crm/v2/actions/watch"
+	type :POST
+	parameters:param + ""
+	connection:"INSERT_ZOHO_CRM_CONNECTION_HERE"
+];
+info response;
 ```
+
+### Test the Webhook on Zoho Flow
+Now that you have enabled notifications, you can test the signal by clicking *Test the Webhook* in Zoho Flow, then create/edit a CRM note. On success, you will be able to see a payload that looks like this.
+
+```javascript
+{
+   query_params: {
+      isdebug: "false"
+   },
+   module: "Notes",
+   resource_uri: "https://www.zohoapis.com/crm/v2/Notes",
+   ids: [
+      "4371574000001619029"
+   ],
+   operation: "insert",
+   channel_id: "1000000068001",
+   token: null
+}
+```
+### Create a Serverless Function in Zoho CRM
+
+
+
