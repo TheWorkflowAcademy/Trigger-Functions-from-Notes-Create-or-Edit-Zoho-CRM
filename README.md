@@ -46,7 +46,7 @@ param =
      {
         "channel_id":"1",
         "events":{"Notes.create","Notes.edit"}, 
-        "channel_expiry":dateTime_FORMATTED,
+        "channel_expiry":"INSERT_DATE_TIME_HERE",
         "notify_url": "INSERT_ZOHO_FLOW_WEBHOOK_HERE"
      } 
    }
