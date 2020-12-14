@@ -86,7 +86,7 @@ Now that you have enabled notifications, you can test the signal by clicking *Te
 
 ### Create a Serverless Function in Zoho CRM
 If you're not familiar with the idea of a serverless function, [please refer to this post](https://github.com/TheWorkflowAcademy/Zoho-CRM-Serverless-Functions). 
-* In the serverless function, set `crmAPIRequest` as the argument with a `string` data type. Assuming that all you need here is the information of the Note record created/edited, you can just get the ID, then use a `getRecordsbyID` function.
+* In the serverless function, set `crmAPIRequest` as a *string* argument. Assuming that all you need here is the information of the Note record, you can just get the ID, then use a `getRecordsbyID` function to fetch the record details.
  * Note: When you do `crmAPIRequest.get("body")`, it will return you the ID in a form of a list. To get the ID, `.get(0)` is used to get the first index.
 ```javascript
 id = crmAPIRequest.get("body").get(0);
@@ -99,8 +99,8 @@ note = zoho.crm.getRecordById("Notes",id);
 Go back to Zoho Flow, and in the Flow Builder, create a custom function by going to Logic > + Custom Function. 
 * Name the function
 * Leave return type as *void*
-* Set the Input Parameters as *id*, and choose *string* as the data type and hit create.
-* Insert the script below into the function, save it, and link it to your Flow.
+* Set the Input Parameters as *id* with *string* as its data type and hit create.
+* Insert the script below into the function, save it, and link to your Flow (this sends the data to the serverless function).
 ```javascript
 void ServerlessReformator(string id)
 {
