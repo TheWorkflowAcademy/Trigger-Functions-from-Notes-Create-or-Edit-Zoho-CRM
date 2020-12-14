@@ -61,6 +61,7 @@ response = invokeurl
 ];
 info response;
 ```
+*Note: To check if your notification is active, you can use the [notification details API.](https://www.zoho.com/crm/developer/docs/api/v2/notifications/get-details.html)*
 
 ### Test the Webhook on Zoho Flow
 Now that you have enabled notifications, you can test the signal by clicking *Test the Webhook* in Zoho Flow, then create/edit a CRM note. On success, you will be able to see a payload that looks like this.
@@ -80,7 +81,38 @@ Now that you have enabled notifications, you can test the signal by clicking *Te
    token: null
 }
 ```
+
+
+
 ### Create a Serverless Function in Zoho CRM
+If you're not familiar with the idea of a serverless function, [please refer to this post](https://github.com/TheWorkflowAcademy/Zoho-CRM-Serverless-Functions). 
+* In the serverless function, set `crmAPIRequest` as the argument with a `string` data type. Assuming that all you need here is the information of the Note record created/edited, you can just get the ID, then use a `getRecordsbyID` function.
+ * Note: When you do `crmAPIRequest.get("body")`, it will return you the ID in a form of a list. To get the ID, use `.get(0)` to get the first index.
+```javascript
+id = crmAPIRequest.get("body").get(0);
+note = zoho.crm.getRecordById("Notes",id);
+```
+* Once you have the ID, you can program any actions you want in this serverless function. However, the set up is not yet complete. For this to work, we need to send the ID from Flow to the serverless function that we've made. 
+ * Go out of the function, click on the ellipsis and select REST API. Switch on the API KEY and `COPY` the URL.
 
+### Write a Custom Function in Zoho Flow
+Go back to Zoho Flow, and in the Flow Builder, create a custom function by going to Logic > + Custom Function. 
+* Name the function
+* Leave return tye as *void*
+* Set the Input Parameters as *id*, and choose *string* as the data type and hit create.
+* Insert the script below into the function, save it, and link it to your Flow.
+```javascript
+void ServerlessReformator(string id)
+{
+callServerlessFunction = invokeurl
+[
+	url :"INSERT_REST_API_KEY_URL_HERE"
+	type :POST
+	parameters:id
+];
+info callServerlessFunction;
+}
+```
+Once this is done, you're now ALL SET! Whenever a Note is created/edited, CRM sends the Note ID to Zoho Flow which then sends an executes the serverless function.
 
-
+TIP: To test that the function is executing properly, you can add a `sendmail` function to your [serverless function script](#create-a-serverless-function-in-zoho-crm) that sends the response to your email.
