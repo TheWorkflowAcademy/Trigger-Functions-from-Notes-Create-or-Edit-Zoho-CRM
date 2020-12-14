@@ -104,13 +104,13 @@ Go back to Zoho Flow, and in the Flow Builder, create a custom function by going
 ```javascript
 void ServerlessReformator(string id)
 {
-	callServerlessFunction = invokeurl
-	[
-		url :"INSERT_REST_API_KEY_URL_HERE"
-		type :POST
-		parameters:id
-	];
-	info callServerlessFunction;
+  callServerlessFunction = invokeurl
+  [
+    url :"INSERT_REST_API_KEY_URL_HERE"
+    type :POST
+    parameters:id
+  ];
+  info callServerlessFunction;
 }
 ```
 Once this is done, you're now ALL SET! Whenever a Note is created/edited, CRM sends the Note ID to Zoho Flow which then sends an executes the serverless function.
