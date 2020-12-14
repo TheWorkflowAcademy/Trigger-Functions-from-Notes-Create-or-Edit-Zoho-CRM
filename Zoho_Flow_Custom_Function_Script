@@ -1,0 +1,10 @@
+void ServerlessReformator(string id)
+{
+  callServerlessFunction = invokeurl
+  [
+    url :"INSERT_REST_API_KEY_URL_HERE"
+    type :POST
+    parameters:id
+  ];
+  info callServerlessFunction;
+}
