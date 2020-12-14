@@ -115,4 +115,4 @@ info callServerlessFunction;
 ```
 Once this is done, you're now ALL SET! Whenever a Note is created/edited, CRM sends the Note ID to Zoho Flow which then sends an executes the serverless function.
 
-TIP: To test that the function is executing properly, you can add a `sendmail` function to your [serverless function script](#create-a-serverless-function-in-zoho-crm) that sends the response to your email.
+TIP: To test that the setup is working properly, you can add a `sendmail` function to sends the response to your email in your [serverless function script.](#create-a-serverless-function-in-zoho-crm)
