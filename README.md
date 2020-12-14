@@ -33,7 +33,7 @@ Notification APIs allow you to get instant notifications whenever an action is p
 * channel_expiry
   * Notifications expiry time. Maximum of only one day from the time they were enabled. If it is not specified or set for more than a day, the default expiry time is for one hour. Accepts only Zoho date-time format.
   * Here, we would want to set the maximum expiry (1 day after enabling notifications) and have a [scheduled function](https://help.zoho.com/portal/en/kb/crm/automate-business-processes/schedules/articles/custom-schedules) to run daily so that the notification stays active at all times.
-  * [Check out this post on how to get current Zoho date-time and format it.](https://github.com/TheWorkflowAcademy/Date-Time-Format-Conversion-Zoho-Deluge)
+  * [Check out this post on how to get the current Zoho date-time and convert it into a parseable format for update.](https://github.com/TheWorkflowAcademy/Date-Time-Format-Conversion-Zoho-Deluge)
 * notify_url
   * URL to be notified (POST request). Whenever any action gets triggered, the notification will be sent through this notify url.
   * Insert the Zoho Flow Webhook URL here.
