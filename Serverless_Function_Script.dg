@@ -1,0 +1,14 @@
+id = crmAPIRequest.get("body").get(0);
+note = zoho.crm.getRecordById("Notes",id);
+
+//Send Mail for Test
+sendmail
+[
+	from :zoho.adminuserid
+	to :"INSERT_YOUR_EMAIL_ADDRESS_HERE"
+	subject :"Response"
+	message :note
+]
+return "";
+
+//Write the Execution Script Here
