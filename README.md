@@ -98,7 +98,7 @@ note = zoho.crm.getRecordById("Notes",id);
 ### Write a Custom Function in Zoho Flow
 Go back to Zoho Flow, and in the Flow Builder, create a custom function by going to Logic > + Custom Function. 
 * Name the function
-* Leave return tye as *void*
+* Leave return type as *void*
 * Set the Input Parameters as *id*, and choose *string* as the data type and hit create.
 * Insert the script below into the function, save it, and link it to your Flow.
 ```javascript
