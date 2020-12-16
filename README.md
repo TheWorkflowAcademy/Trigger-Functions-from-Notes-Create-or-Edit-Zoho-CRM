@@ -25,7 +25,7 @@ Once this is done, *COPY* the webhook that you have created.
 
 ### Enable Notifications
 
-Notification APIs allow you to get instant notifications whenever an action is performed (create/update/delete) on the records of a module. The system notifies you of the event on the URL provided. The [Zoho Flow webhook that you have created](#create-a-zoho-flow-webhook) will be set as the URL here.
+Notification APIs allow you to get instant notifications whenever an action is performed (create/update/delete) on the records of a module. The system notifies you of the event to the URL provided. The [Zoho Flow webhook that you have created](#create-a-zoho-flow-webhook) will be set as the URL here.
 * channel_id
   * The given value is sent back in notification URL body to make sure that the notification is for a particular channel. Can be any arbitrary number.
 * events
