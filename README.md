@@ -2,11 +2,11 @@
 A workaround that allows Notes (Create/Edit) to be a function trigger in Zoho CRM.
 
 ## Core Idea
-Workflow Rules in Zoho CRM doesn't allow *Notes* to be set as a function trigger. While waiting for Zoho to support this, we have found a workaround that enables function triggering from *Notes* (create/edit). Here's the idea:
+*Notes* is technically a module in Zoho CRM, but unlike other modules, Workflow Rules doesn't allow you to set it as a function trigger. Till the day that becomes possible, we have found a workaround that enables function triggering from Notes (create/edit). Here's the idea:
 
 [Enable Notifications](https://www.zoho.com/crm/developer/docs/api/v2/notifications/overview.html) -> [Zoho Flow](https://www.zoho.com/flow/) -> [Serverless Function](https://github.com/TheWorkflowAcademy/Zoho-CRM-Serverless-Functions)
 
-1. Enable Notifications in CRM that sends a webhook to Zoho Flow on trigger of *Notes* (edit/create).
+1. Enable Notifications in CRM sends a webhook to Zoho Flow on trigger of *Notes* (edit/create).
 2. Zoho Flow receives and interprets the data package, then sends the ID to a serverless function in CRM.
 3. The Serverless Function gets the ID and executes the custom function.
 
