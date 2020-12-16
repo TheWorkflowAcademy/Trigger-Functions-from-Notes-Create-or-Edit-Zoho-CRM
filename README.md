@@ -100,7 +100,8 @@ Go back to Zoho Flow, and in the Flow Builder, create a custom function by going
 * Name the function
 * Leave return type as *void*
 * Set the Input Parameters as *id* with *string* as its data type and hit create.
-* Insert the script below into the function, save it, and link to your Flow (this sends the data to the serverless function).
+* Insert the script below into the function, save it, and link to your Flow (select the id at the payload when you link the flow to the logic).
+ 
 ```javascript
 void ServerlessReformator(string id)
 {
