@@ -4,28 +4,32 @@ A workaround that allows Notes (Create/Edit) to be a function trigger in Zoho CR
 ## Core Idea
 Unlike other modules in CRM, Workflow Rules doesn't allow you to set *Notes* as a function trigger. Till that day arrives, we have found a workaround that enables function triggering from Notes (create/edit). Here's the idea:
 
-[Enable Notifications](https://www.zoho.com/crm/developer/docs/api/v2/notifications/overview.html) -> [Zoho Flow](https://www.zoho.com/flow/) -> [Serverless Function](https://github.com/TheWorkflowAcademy/Zoho-CRM-Serverless-Functions)
+[Enable Notifications](https://www.zoho.com/crm/developer/docs/api/v2/notifications/overview.html) -> [Serverless Function](https://github.com/TheWorkflowAcademy/Zoho-CRM-Serverless-Functions)
 
-1. Enable Notifications in CRM sends a webhook to Zoho Flow on trigger of *Notes* (edit/create).
-2. Zoho Flow receives and interprets the data package, then sends the ID to a serverless function in CRM.
-3. The Serverless Function gets the ID and executes the custom function.
+1. Enable Notifications API for the Notes module that sends data on trigger of Notes (create/edit) to a serverless function in CRM.
+2. The serverless function receives the Note ID along with other data and executes the custom function.
 
 ## Configuration
 The following Zoho CRM Connection scope is needed:
 * ZohoCRM.notifications.ALL
 
 ## Tutorial
-In this set up, you will be frequently toggling between CRM and Flow, so it's a good idea to have 2 tabs/windows open for each app.
 
-### Create a Zoho Flow Webhook
-Login to Zoho Flow and create a new Flow based on this settings: 
-* Create Flow -> Webhook -> Payload Format (JSON)
+### Create a Serverless Function in Zoho CRM
+If you're not familiar with the idea of a serverless function, [please refer to this post](https://github.com/TheWorkflowAcademy/Zoho-CRM-Serverless-Functions). 
+* In the serverless function, set `crmAPIRequest` as a *string* argument. Assuming that all you need here is the information of the Note record, you can just get the ID, then use a `getRecordsbyID` function to fetch the record details.
+ * Note: When you do `crmAPIRequest.get("body")`, it will return you the ID in a form of a list. To get the ID, `.get(0)` is used to get the first index.
+```javascript
+id = crmAPIRequest.get("body").get(0);
+note = zoho.crm.getRecordById("Notes",id);
+```
+* Tip: To test that the setup is working initially, you can configure a sendmail function in the serverless to send the response to your email.
+* Save the serverless function and create an API key for it (you need this key to enable notifications in the next step).
 
-Once this is done, *COPY* the webhook that you have created.
 
 ### Enable Notifications
 
-Notification APIs allow you to get instant notifications whenever an action is performed (create/update/delete) on the records of a module. The system notifies you of the event to the URL provided. The [Zoho Flow webhook that you have created](#create-a-zoho-flow-webhook) will be set as the URL here.
+Notification APIs allow you to get instant notifications whenever an action is performed (create/update/delete) on the records of a module. The system notifies you of the event to the URL provided. The CRM serverless function API key will be set as the URL here.
 * channel_id
   * The given value is sent back in notification URL body to make sure that the notification is for a particular channel. Can be any arbitrary number.
 * events
@@ -36,7 +40,7 @@ Notification APIs allow you to get instant notifications whenever an action is p
   * [Check out this post on how to get the current Zoho date-time and convert it into a parseable format for update.](https://github.com/TheWorkflowAcademy/Date-Time-Format-Conversion-Zoho-Deluge)
 * notify_url
   * URL to be notified (POST request). Whenever any action gets triggered, the notification will be sent through this notify url.
-  * Insert the Zoho Flow Webhook URL here.
+  * Insert the Zoho CRM Serverless Function API Key here.
 
 ```javascript
 param = 
@@ -63,57 +67,7 @@ info response;
 ```
 *Note: To check if your notification is active, you can use the [notification details API.](https://www.zoho.com/crm/developer/docs/api/v2/notifications/get-details.html)*
 
-### Test the Webhook on Zoho Flow
-Now that you have enabled notifications, you can test the signal by clicking *Test the Webhook* in Zoho Flow, then create/edit a CRM note. On success, you will be able to see a payload that looks like this.
+Now that you have enabled notifications, you can test the signal by creating/editing a CRM note. On success, you will be able to see the payload data.
 
-```javascript
-{
-   query_params: {
-      isdebug: "false"
-   },
-   module: "Notes",
-   resource_uri: "https://www.zohoapis.com/crm/v2/Notes",
-   ids: [
-      "4371574000001619029"
-   ],
-   operation: "insert",
-   channel_id: "1000000068001",
-   token: null
-}
-```
-
-
-
-### Create a Serverless Function in Zoho CRM
-If you're not familiar with the idea of a serverless function, [please refer to this post](https://github.com/TheWorkflowAcademy/Zoho-CRM-Serverless-Functions). 
-* In the serverless function, set `crmAPIRequest` as a *string* argument. Assuming that all you need here is the information of the Note record, you can just get the ID, then use a `getRecordsbyID` function to fetch the record details.
- * Note: When you do `crmAPIRequest.get("body")`, it will return you the ID in a form of a list. To get the ID, `.get(0)` is used to get the first index.
-```javascript
-id = crmAPIRequest.get("body").get(0);
-note = zoho.crm.getRecordById("Notes",id);
-```
-* Once you have the ID, you can program any actions you want in this serverless function. However, the set up is not yet complete. For this to work, we need to send the ID from Flow to the serverless function that we've made. 
- * Go out of the function, click on the ellipsis and select REST API. Switch on the API KEY and `COPY` the URL.
-
-### Write a Custom Function in Zoho Flow
-Go back to Zoho Flow, and in the Flow Builder, create a custom function by going to Logic > + Custom Function. 
-* Name the function
-* Leave return type as *void*
-* Set the Input Parameters as *id* with *string* as its data type and hit create.
-* Insert the script below into the function, save it, and link to your Flow (select the id at the payload when you link the flow to the logic).
- 
-```javascript
-void ServerlessReformator(string id)
-{
-  callServerlessFunction = invokeurl
-  [
-    url :"INSERT_REST_API_KEY_URL_HERE"
-    type :POST
-    parameters:id
-  ];
-  info callServerlessFunction;
-}
-```
-Once this is done, you're now ALL SET! Whenever a Note is created/edited, CRM sends the Note ID to Zoho Flow which then sends and executes the serverless function.
-
-TIP: To test that the setup is working properly, you can add a `sendmail` function to send the response to your email in your [serverless function script.](#create-a-serverless-function-in-zoho-crm)
+If you have sendmail configured in the serverless function, you can verify that the setup is working by receiving the data in your email.
+Once this is done, you’re ALL SET! You've now successfully set up a Note action (create/edit) as a workflow trigger where you can configure custom actions in the serverless function.
